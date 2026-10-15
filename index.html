@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepCounter App</title>
+    <!-- style -->
+     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+     <link rel="stylesheet" href="assets/css/style.css">
+     <link rel = "stylesheet" href = "assets/js/dist/skeleton.css">
+    <link rel = "stylesheet" href = "assets/js/dist/themes/breezy/theme.css">
+     <link rel = "stylesheet" href = "assets/js/dist/themes/breezy/palettes/indigo.css">
+
+     
+     
+</head>
+<body data-bs-theme="" data-color-scheme=""></body>
+  <div class="themeSwitch">
+    <i class="bi bi-brightness-high-fill" id="lightModeBtn"></i>
+    <i class="bi bi-moon-fill hide" id="darkModeBtn"></i>
+  </div>
+    <div class="container">
+        <header>
+            <h1><i class="bi bi-cloud-sun"></i> Weather App</h1>
+            <h3>2026.</h3>
+        </header>
+        <div id="msg"> </div>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav" id="baseMenu">
+        <!--base menu-->
+        <li class="nav-item">
+          <a class="nav-link " href="#" onclick="navigate('users/home')">Home</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="#"onclick="navigate('users/login')">Login</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="#"onclick="navigate('users/register')">Registration</a>
+        </li>
+      </ul>
+
+      <!-- user menu-->
+      <ul class="navbar-nav" id="userMenu">
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="navigate('users/weather')">Weather</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="navigate('users/profile')">My profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="logout()">Logout</a>
+        </li>
+
+      </ul>
+      <!--admin menu-->
+      <ul class="navbar-nav" id="adminMenu">
+        
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="navigate('admin/dashboard')">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="navigate('admin/users')">Manage users</a>
+        </li>
+
+        <!--user,admiun menu-->
+        <li class="nav-item">
+          <a class="nav-link " href="#"onclick="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+        <main id="content"></main>
+        <footer>
+            <p class="text-center">Bajai SZC Türr István Technikum - 13.A szoftverfejlesztő</p>
+        </footer>
+    </div>
+
+     <!-- controllers-->
+      <script src="controllers/userCtrl.js"></script>
+      <script src="controllers/weatherCtrl.js"></script>
+      <script src="controllers/messageCtrl.js"></script>
+      <script src="controllers/adminCtrl.js"></script>
+
+    <!-- scriptek-->
+     <script src="assets/js/bootstrap.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+     <script src="assets/js/moments.js"></script>
+
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src = "assets/js/dist/fullcalendar.global.js"></script>
+     <script src ="assets/js/dist/themes/breezy/global.js"></script>    
+     
+
+
+     <script src="assets/js/app.js"></script>
+
+
+</body>
+</html>
