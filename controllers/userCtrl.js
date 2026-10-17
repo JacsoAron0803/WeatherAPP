@@ -100,23 +100,23 @@ function loadUser(){
 function clearUser(){
     sessionStorage.removeItem('SCU');
 }
-function loginCheck(){
-    if (user = loadUser()){ 
-        if (user.role == 'admin'){
-            setMenuItems('admin')
-            navigate('admin/dashboard')
-        }
-        else{
-            setMenuItems('user')
-            navigate('users/home')
-        }
 
+function loginCheck() {
+    let user = loadUser();
+
+    if (user) {
+        if (user.role == 'admin') {
+            setMenuItems('admin');
+        }
+        else {
+            setMenuItems('user');
+        }
     }
-    else{
-        setMenuItems('')
-        navigate('users/login')
+    else {
+        setMenuItems('');
     }
 }
+
 
 function setMenuItems(param){
     let baseMenu = document.querySelector('#baseMenu');

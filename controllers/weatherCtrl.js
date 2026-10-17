@@ -1,36 +1,40 @@
 
+
 async function getWeather() {
-    let luid = loadUser().ID ? loadUser().ID : 0;
-
-    const response = await fetch('http://localhost:3000/admin/weather/list', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            luid: luid
-        })
-    });
-
-    if (response.status !== 200) {
+    try {
+        const response = await fetch('http://localhost:3000/weather');
         const res = await response.json();
-        showMessage('danger', 'ERROR', res.error);
-    }
-    else {
-        const res = await response.json();
+
+        if (!response.ok) {
+            showMessage('danger', 'ERROR', res.error || 'Failed to load weather forecasts.');
+            return;
+        }
+
         const results = res.results;
 
-        console.log(results);
+        showAdminWeather();
         drawWeatherTable(results);
         initChart(results);
         initCalendar(results);
+
+    } catch (error) {
+        console.error('Weather loading error:', error);
+        showMessage('danger', 'ERROR', 'Could not connect to the server.');
     }
 }
+
 
 
 function drawWeatherTable(results) {
     let tbody = document.querySelector('#tbody');
     tbody.innerHTML = '';
+    const user = loadUser();
+    const isAdmin = user && user.role === 'admin';
+
+    const operations = document.querySelector('#operationsHeader');
+    if (operations) {
+        operations.style.display = isAdmin ? '' : 'none';
+    }
 
     results.forEach((weather, index) => {
         tbody.innerHTML += `
@@ -47,13 +51,13 @@ function drawWeatherTable(results) {
                 <td class="text-end">${weather.humidity ?? '-'}%</td>
                 <td class="text-end">${weather.pressure ?? '-'}</td>
                 <td class="text-end">${weather.uv_index ?? '-'}</td>
-                <td class="text-end">
-                    <button type="button" class="btn btn-danger"
-                        onclick="deleteWeather(${weather.ID})">
-                        <i class="bi bi-trash3-fill"></i>
-                        &nbsp;&nbsp;Delete
-                    </button>
-                </td>
+                ${isAdmin ? `<td class="text-end">
+                <button type="button" class="btn btn-danger"
+                    onclick="deleteWeather(${weather.ID})">
+                    <i class="bi bi-trash3-fill"></i>
+                    &nbsp;&nbsp;Delete
+                </button>
+            </td>` : ''}
             </tr>
         `;
     });
@@ -230,4 +234,14 @@ function initCalendar(results) {
     });
 
     calendar.render();
+}
+function showAdminWeather() {
+    let user = loadUser();
+
+    if (user && user.role == 'admin') {
+        document.querySelector('#adminWeather').style.display = 'block';
+    }
+    else {
+        document.querySelector('#adminWeather').style.display = 'none';
+    }
 }

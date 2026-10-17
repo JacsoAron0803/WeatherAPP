@@ -1,6 +1,10 @@
-<h3>Manage Weather Forecasts</h3>
+<h3>Weather Forecasts:</h3>
 <hr>
-<div class="accordion mb-3" id="accordionExample">
+<div id="adminWeather" style="display: none;">
+
+    <div class="accordion mb-3" id="accordionExample">
+
+        <div class="accordion mb-3" id="accordionExample">
   <div class="accordion-item">
     <h2 class="accordion-header">
       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -122,6 +126,11 @@
 
 </div>
 
+    </div>
+
+</div>
+
+
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -156,7 +165,7 @@
             <th scope="col" class="text-end">Humidity</th>
             <th scope="col" class="text-end">Pressure</th>
             <th scope="col" class="text-end">UV</th>
-            <th scope="col" class="text-end">Operations</th>
+            <th scope="col" class="text-end" id="operations">Operations</th>
           </tr>
         </thead>
         <tbody id="tbody">
