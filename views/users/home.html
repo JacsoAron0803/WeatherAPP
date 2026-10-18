@@ -1,20 +1,84 @@
-<h3>Home</h3>
-<hr>
-<div class="row">
-    <div class="col-lg-4 text-center">
-        <h1><i class="bi bi-person-walking logo" ></i></h1>
-        <h1>Welcome to</h1>
-        <h2>Weather App</h2>
-        <h1>2026.</h1>
-    </div>
-    <div class="col-lg-8">
 
-        <h1>Your Weather, At a Glance</h1> 
-        <p> Stay prepared for every forecast and keep up with changing weather conditions with ease. </p> 
-        <p> Whether you're planning a day out, heading to work, or deciding what to wear, get the weather updates you need to make the most of your day. </p> 
-        <h2>Check. Prepare. Explore.</h2> 
-        <p> View current conditions, check the forecast, and plan ahead with confidence. </p> 
-        <p> Your day starts with the forecast.
-        <button class="btn btn-primary" onclick="navigate('users/register')">Get Started</button>
+<div class="container py-4 home-page">
+
+    <h3 class="mb-3">Home</h3>
+    <hr class="mb-4">
+
+    <div class="row g-4 align-items-stretch">
+
+        <!-- Bal oldali üdvözlő kártya -->
+        <div class="col-lg-4">
+            <div class="home-welcome text-center h-100 p-4 rounded-4">
+
+                <div class="home-icon mb-3">
+                    <i class="bi bi-cloud-sun"></i>
+                </div>
+
+                <p class="home-label mb-2">WELCOME TO</p>
+
+                <h1 class="fw-bold">Weather App</h1>
+
+                <div class="home-year mt-3">2026.</div>
+
+                <p class="mt-3 mb-0">
+                    Your daily weather companion.
+                </p>
+
+            </div>
+        </div>
+
+        <!-- Jobb oldali bemutató -->
+        <div class="col-lg-8">
+            <div class="home-content h-100 p-4 p-lg-5 rounded-4">
+
+                <span class="home-badge">
+                    <i class="bi bi-cloud-check me-2"></i>
+                    WEATHER MADE SIMPLE
+                </span>
+
+                <h1 class="fw-bold mt-4 mb-3">
+                    Your Weather,<br>
+                    <span class="home-highlight">At a Glance.</span>
+                </h1>
+
+                <p class="home-description">
+                    Stay prepared for every forecast and keep up
+                    with changing weather conditions with ease.
+                </p>
+
+                <p class="home-description">
+                    Whether you're planning a day out, heading to
+                    work, or deciding what to wear, get the weather
+                    updates you need to make the most of your day.
+                </p>
+
+                <div class="home-divider my-4"></div>
+
+                <h2 class="fw-bold mb-3">
+                    Check. Prepare. Explore.
+                </h2>
+
+                <p class="home-description">
+                    View current conditions, check the forecast,
+                    and plan ahead with confidence.
+                </p>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 mt-4">
+                    <button
+                        class="btn btn-primary home-button"
+                        onclick="navigate('users/register')">
+                        Get Started
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+
+                    <span class="home-footer-text">
+                        <i class="bi bi-sun me-1"></i>
+                        Your day starts with the forecast.
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>

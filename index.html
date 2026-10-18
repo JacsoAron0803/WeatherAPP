@@ -35,7 +35,7 @@
       <ul class="navbar-nav" id="baseMenu">
         <!--base menu-->
         <li class="nav-item">
-          <a class="nav-link " href="#" onclick="navigate('users/home')">Home</a>
+          <a class="nav-link " href="#" onclick="navigate('guest/home')">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#" onclick="navigate('users/weather')">Weather</a>
@@ -64,19 +64,25 @@
       <!--admin menu-->
       <ul class="navbar-nav" id="adminMenu">
         <li class="nav-item">
-          <a class="nav-link " href="#"onclick="navigate('users/weather')">Weather</a>
+          <a class="nav-link " href="#"onclick="navigate('users/home')">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#"onclick="navigate('admin/dashboard')">Dashboard</a>
+          <a class="nav-link " href="#"onclick="navigate('users/weather')">Weather</a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link " href="#"onclick="navigate('admin/users')">Manage users</a>
         </li>
 
         <!--user,admiun menu-->
         <li class="nav-item">
+          <a class="nav-link " href="#"onclick="navigate('users/profile')">My profile</a>
+        </li>
+        
+        <li class="nav-item">
           <a class="nav-link " href="#"onclick="logout()">Logout</a>
         </li>
+        
       </ul>
     </div>
   </div>

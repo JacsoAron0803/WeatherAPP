@@ -87,7 +87,7 @@ async function login(){
 function logout(){
     clearUser()
     loginCheck()
-
+    navigate('users/home')
 }
 
 function storeUser(user){

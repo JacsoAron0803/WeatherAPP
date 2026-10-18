@@ -1,4 +1,6 @@
-
+let weatherChart = null;
+let weatherCalendar = null;
+let weatherCalendarElement = null;
 
 async function getWeather() {
     try {
@@ -37,8 +39,8 @@ function drawWeatherTable(results) {
     }
 
     results.forEach((weather, index) => {
-        tbody.innerHTML += `
-            <tr>
+    tbody.innerHTML += `
+        <tr id="weather-row-${weather.ID}">
                 <th scope="row">${index + 1}</th>
                 <td>${moment(weather.date).format('YYYY.MM.DD')}</td>
                 <td>${weather.location}</td>
@@ -52,6 +54,10 @@ function drawWeatherTable(results) {
                 <td class="text-end">${weather.pressure ?? '-'}</td>
                 <td class="text-end">${weather.uv_index ?? '-'}</td>
                 ${isAdmin ? `<td class="text-end">
+                <button type="button" class="btn btn-primary btn-sm"
+                    onclick="editWeather(${weather.ID}, ${index + 1})">
+                    &nbsp;&nbsp;Edit
+                </button>
                 <button type="button" class="btn btn-danger"
                     onclick="deleteWeather(${weather.ID})">
                     <i class="bi bi-trash3-fill"></i>
@@ -133,6 +139,154 @@ async function createWeather() {
 
     getWeather();
 }
+function editWeather(weatherID, index) {
+    let row = document.querySelector('#weather-row-' + weatherID);
+
+
+    let cells = row.querySelectorAll('td');
+
+    let date = cells[0].innerText;
+    let location = cells[1].innerText;
+    let weather_type = cells[2].innerText;
+    let temp_min = cells[3].innerText.replace(' °C', '');
+    let temp_max = cells[4].innerText.replace(' °C', '');
+    let precipitation = cells[5].innerText;
+    let precipitation_probability = cells[6].innerText.replace('%', '');
+    let wind = cells[7].innerText.split(' ');
+    let wind_speed = wind[0] === '-' ? '' : wind[0];
+    let wind_direction = wind[1] || '';
+    let humidity = cells[8].innerText.replace('%', '');
+    let pressure = cells[9].innerText;
+    let uv_index = cells[10].innerText;
+
+    if (precipitation === '-') precipitation = '';
+    if (precipitation_probability === '-') precipitation_probability = '';
+    if (humidity === '-') humidity = '';
+    if (pressure === '-') pressure = '';
+    if (uv_index === '-') uv_index = '';
+
+    date = moment(date, 'YYYY.MM.DD').format('YYYY-MM-DD');
+
+    row.innerHTML = `
+        <th scope="row">${index}</th>
+
+        <td><input type="date" id="edit-date-${weatherID}"
+            class="form-control" value="${date}"></td>
+
+        <td><input type="text" id="edit-location-${weatherID}"
+            class="form-control" value="${location}"></td>
+
+        <td><input type="text" id="edit-type-${weatherID}"
+            class="form-control" value="${weather_type}"></td>
+
+        <td><input type="number" id="edit-min-${weatherID}"
+            class="form-control" value="${temp_min}"></td>
+
+        <td><input type="number" id="edit-max-${weatherID}"
+            class="form-control" value="${temp_max}"></td>
+
+        <td><input type="number" id="edit-precipitation-${weatherID}"
+            class="form-control" value="${precipitation}"></td>
+
+        <td><input type="number" id="edit-probability-${weatherID}"
+            class="form-control" value="${precipitation_probability}"></td>
+
+        <td>
+            <input type="number" id="edit-wind-${weatherID}"
+                class="form-control mb-1" placeholder="Speed"
+                value="${wind_speed}">
+            <input type="text" id="edit-direction-${weatherID}"
+                class="form-control" placeholder="Direction"
+                value="${wind_direction}">
+        </td>
+
+        <td><input type="number" id="edit-humidity-${weatherID}"
+            class="form-control" value="${humidity}"></td>
+
+        <td><input type="number" id="edit-pressure-${weatherID}"
+            class="form-control" value="${pressure}"></td>
+
+        <td><input type="number" id="edit-uv-${weatherID}"
+            class="form-control" value="${uv_index}"></td>
+
+        <td>
+            <button type="button" class="btn btn-success btn-sm"
+                onclick="saveWeather(${weatherID})">
+                Save
+            </button>
+
+            <button type="button" class="btn btn-secondary btn-sm"
+                onclick="getWeather()">
+                Cancel
+            </button>
+        </td>
+    `;
+    
+}
+async function saveWeather(weatherID) {
+    let luid = loadUser().ID ? loadUser().ID : 0;
+
+    let date = document.querySelector('#edit-date-' + weatherID).value;
+    let location = document.querySelector('#edit-location-' + weatherID).value;
+    let weather_type = document.querySelector('#edit-type-' + weatherID).value;
+    let temp_min = document.querySelector('#edit-min-' + weatherID).value;
+    let temp_max = document.querySelector('#edit-max-' + weatherID).value;
+    let precipitation = document.querySelector('#edit-precipitation-' + weatherID).value;
+    let precipitation_probability = document.querySelector('#edit-probability-' + weatherID).value;
+    let wind_speed = document.querySelector('#edit-wind-' + weatherID).value;
+    let wind_direction = document.querySelector('#edit-direction-' + weatherID).value;
+    let humidity = document.querySelector('#edit-humidity-' + weatherID).value;
+    let pressure = document.querySelector('#edit-pressure-' + weatherID).value;
+    let uv_index = document.querySelector('#edit-uv-' + weatherID).value;
+
+    if (!date || !location || !weather_type ||
+        temp_min === '' || temp_max === '') {
+        showMessage('danger', 'ERROR', 'Please fill in all required fields!');
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `http://localhost:3000/weather/${luid}/${weatherID}`,
+            {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    luid: luid,
+                    date: date,
+                    location: location,
+                    temp_min: temp_min,
+                    temp_max: temp_max,
+                    weather_type: weather_type,
+                    precipitation: precipitation === '' ? null : precipitation,
+                    precipitation_probability: precipitation_probability === '' ? null : precipitation_probability,
+                    wind_speed: wind_speed === '' ? null : wind_speed,
+                    wind_direction: wind_direction === '' ? null : wind_direction,
+                    humidity: humidity === '' ? null : humidity,
+                    pressure: pressure === '' ? null : pressure,
+                    uv_index: uv_index === '' ? null : uv_index
+                })
+            }
+        );
+
+        const res = await response.json();
+
+        if (!response.ok) {
+            showMessage('danger', 'ERROR', res.error);
+            return;
+        }
+
+        showMessage('success', 'SUCCESS', res.message);
+
+        getWeather();
+
+    } catch (error) {
+        console.error('Weather update error:', error);
+        showMessage('danger', 'ERROR', 'Could not connect to the server.');
+    }
+}
 
 
 async function deleteWeather(weatherID) {
@@ -161,22 +315,43 @@ async function deleteWeather(weatherID) {
 }
 
 
+
 function initChart(results) {
-    let labels = [];
-    let minTemps = [];
-    let maxTemps = [];
+    const canvas = document.getElementById('myChart');
 
-    results.sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (!canvas) {
+        console.warn('Chart canvas #myChart was not found.');
+        return;
+    }
 
-    results.forEach((result) => {
-        labels.push(moment(result.date).format('YYYY-MM-DD'));
-        minTemps.push(result.temp_min);
-        maxTemps.push(result.temp_max);
-    });
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded.');
+        return;
+    }
 
-    const ctx = document.getElementById('myChart');
+    // korabbi torlese ha van mar letrehozva
+    if (weatherChart) {
+        weatherChart.destroy();
+        weatherChart = null;
+    }
 
-    new Chart(ctx, {
+    const sortedResults = [...results].sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    const labels = sortedResults.map(
+        result => moment(result.date).format('YYYY-MM-DD')
+    );
+
+    const minTemps = sortedResults.map(
+        result => Number(result.temp_min)
+    );
+
+    const maxTemps = sortedResults.map(
+        result => Number(result.temp_max)
+    );
+
+    weatherChart = new Chart(canvas, {
         type: 'line',
         data: {
             labels: labels,
@@ -184,19 +359,37 @@ function initChart(results) {
                 {
                     label: 'Minimum temperature (°C)',
                     data: minTemps,
-                    borderWidth: 1
+                    borderWidth: 2,
+                    tension: 0.25
                 },
                 {
                     label: 'Maximum temperature (°C)',
                     data: maxTemps,
-                    borderWidth: 1
+                    borderWidth: 2,
+                    tension: 0.25
                 }
             ]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             scales: {
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Temperature (°C)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
                 }
             }
         }
@@ -204,44 +397,55 @@ function initChart(results) {
 }
 
 
+
+
 function initCalendar(results) {
-    var calendarEl = document.getElementById('calendar');
-    colorSheme = localStorage.getItem('SCT') || 'light';
+    const calendarElement = document.getElementById('calendar');
 
-    let myEvents = results.map((result) => {
-        return {
-            title: result.location + ' - ' + result.weather_type,
-            start: result.date
-        };
-    });
+    if (!calendarElement) {
+        console.warn('Calendar element #calendar was not found.');
+        return;
+    }
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        colorScheme: colorSheme,
-        initialDate: new Date(),
+    if (typeof FullCalendar === 'undefined') {
+        console.error('FullCalendar is not loaded.');
+        return;
+    }
+
+    const events = results.map(result => ({
+        title: `Min: ${result.temp_min}°C | Max: ${result.temp_max}°C`,
+        start: result.date,
+        allDay: true
+    }));
+
+    if (
+        weatherCalendar &&
+        weatherCalendarElement !== calendarElement
+    ) {
+        weatherCalendar.destroy();
+        weatherCalendar = null;
+        weatherCalendarElement = null;
+    }
+
+
+    if (weatherCalendar) {
+        weatherCalendar.removeAllEvents();
+        weatherCalendar.addEventSource(events);
+        weatherCalendar.updateSize();
+        return;
+    }
+
+    weatherCalendar = new FullCalendar.Calendar(calendarElement, {
         initialView: 'dayGridMonth',
-        nowIndicator: true,
+        height: 'auto',
+        events: events,
         headerToolbar: {
-            left: 'prevYear,prev,today,next,nextYear',
+            left: 'prev,next today',
             center: 'title',
-            right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        navLinks: true,
-        editable: false,
-        selectable: false,
-        selectMirror: true,
-        dayMaxEvents: true,
-        events: myEvents
+            right: 'dayGridMonth,timeGridWeek,listWeek'
+        }
     });
 
-    calendar.render();
-}
-function showAdminWeather() {
-    let user = loadUser();
-
-    if (user && user.role == 'admin') {
-        document.querySelector('#adminWeather').style.display = 'block';
-    }
-    else {
-        document.querySelector('#adminWeather').style.display = 'none';
-    }
+    weatherCalendarElement = calendarElement;
+    weatherCalendar.render();
 }
